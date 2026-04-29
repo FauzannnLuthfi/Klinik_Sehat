@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistem Pendaftaran Pasien Klinik - Kelola data pasien dengan mudah dan efisien">
+  <title>Daftar Pasien - Klinik Sehat Sejahtera</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
+    <div>
+      <h5>Klinik Sehat</h5>
+      <small>Sistem Pendaftaran</small>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Menu Utama</div>
+    <div class="nav-item">
+      <a href="index.html" class="nav-link active"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+    </div>
+    <div class="nav-item">
+      <a href="index.html" class="nav-link"><i class="bi bi-people-fill"></i> Data Pasien</a>
+    </div>
+    <div class="nav-item">
+      <a href="#" class="nav-link"><i class="bi bi-calendar2-check"></i> Jadwal Konsultasi</a>
+    </div>
+    <div class="nav-item">
+      <a href="#" class="nav-link"><i class="bi bi-clipboard2-pulse"></i> Rekam Medis</a>
+    </div>
+    <div class="nav-label">Lainnya</div>
+    <div class="nav-item">
+      <a href="#" class="nav-link"><i class="bi bi-hospital"></i> Data Dokter</a>
+    </div>
+    <div class="nav-item">
+      <a href="#" class="nav-link"><i class="bi bi-graph-up"></i> Laporan</a>
+    </div>
+    <div class="nav-item">
+      <a href="#" class="nav-link"><i class="bi bi-gear"></i> Pengaturan</a>
+    </div>
+  </nav>
+</aside>
+
+<!-- Main Content -->
+<div class="main-content">
+  <!-- Top Navbar -->
+  <header class="top-navbar">
+    <div style="display:flex;align-items:center;gap:16px">
+      <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Cari pasien, dokter, dll..." id="searchInput">
+      </div>
+    </div>
+    <div class="user-info">
+      <button class="notif-btn">
+        <i class="bi bi-bell"></i>
+        <span class="notif-badge">3</span>
+      </button>
+      <div style="display:flex;align-items:center;gap:10px;cursor:pointer">
+        <div class="user-avatar">AD</div>
+        <div>
+          <div style="font-size:0.85rem;font-weight:600">Admin</div>
+          <div style="font-size:0.7rem;color:var(--gray-600)">Administrator</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Content -->
+  <div class="page-content">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="breadcrumb-custom">
+        <a href="index.html">Dashboard</a>
+        <i class="bi bi-chevron-right"></i>
+        <span>Daftar Pasien</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div>
+          <h2>Daftar Pasien</h2>
+          <p>Kelola semua data pasien klinik</p>
+        </div>
+        <button class="btn-primary-custom" onclick="openAddModal()">
+          <i class="bi bi-plus-lg"></i> Tambah Pasien
+        </button>
+      </div>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-lg-3 col-sm-6">
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="bi bi-people-fill"></i></div>
+          <div class="stat-info">
+            <h3 id="statTotal">0</h3>
+            <p>Total Pasien</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6">
+        <div class="stat-card">
+          <div class="stat-icon orange"><i class="bi bi-hourglass-split"></i></div>
+          <div class="stat-info">
+            <h3 id="statWaiting">0</h3>
+            <p>Menunggu</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6">
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="bi bi-activity"></i></div>
+          <div class="stat-info">
+            <h3 id="statInProgress">0</h3>
+            <p>Sedang Diperiksa</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6">
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="bi bi-check-circle-fill"></i></div>
+          <div class="stat-info">
+            <h3 id="statDone">0</h3>
+            <p>Selesai</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="card-panel">
+      <div class="card-panel-header">
+        <h5><i class="bi bi-table"></i> Data Antrian Pasien Hari Ini</h5>
+        <div class="filter-bar">
+          <select id="filterStatus">
+            <option value="">Semua Status</option>
+            <option value="waiting">Menunggu</option>
+            <option value="in-progress">Sedang Diperiksa</option>
+            <option value="done">Selesai</option>
+            <option value="cancelled">Dibatalkan</option>
+          </select>
+          <select id="filterDokter">
+            <option value="">Semua Dokter</option>
+            <option value="dr. Siti Nurhaliza, Sp.PD">dr. Siti Nurhaliza, Sp.PD</option>
+            <option value="dr. Andi Wijaya, Sp.OG">dr. Andi Wijaya, Sp.OG</option>
+            <option value="dr. Maya Putri, Sp.M">dr. Maya Putri, Sp.M</option>
+            <option value="dr. Hendra Kusuma, Sp.THT">dr. Hendra Kusuma, Sp.THT</option>
+            <option value="dr. Budi Santoso, Sp.JP">dr. Budi Santoso, Sp.JP</option>
+          </select>
+          <button class="btn-outline-custom" onclick="filterData()">
+            <i class="bi bi-funnel"></i> Filter
+          </button>
+        </div>
+      </div>
+      <div class="card-panel-body">
+        <div style="overflow-x:auto">
+          <table class="table-custom">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>No. Rekam Medis</th>
+                <th>Nama Pasien</th>
+                <th>Jadwal Konsultasi</th>
+                <th>Dokter Spesialis</th>
+                <th>Status Antrian</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="patientTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="pagination-custom">
+        <span>Menampilkan 1-8 dari 8 data</span>
+        <div class="page-nums">
+          <button class="page-btn"><i class="bi bi-chevron-left"></i></button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn"><i class="bi bi-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Tambah/Edit Pasien -->
+<div class="modal fade" id="patientModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Tambah Pasien Baru</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="patientForm">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label-custom">Nama Lengkap</label>
+              <input type="text" class="form-control form-control-custom" id="inputNama" placeholder="Masukkan nama lengkap" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-custom">Jenis Kelamin</label>
+              <select class="form-control form-control-custom" id="inputGender">
+                <option value="">Pilih jenis kelamin</option>
+                <option value="Laki-laki">Laki-laki</option>
+                <option value="Perempuan">Perempuan</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-custom">Tempat Lahir</label>
+              <input type="text" class="form-control form-control-custom" id="inputTempatLahir" placeholder="Masukkan tempat lahir">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-custom">Tanggal Lahir</label>
+              <input type="date" class="form-control form-control-custom" id="inputTanggalLahir">
+            </div>
+            <div class="col-12">
+              <label class="form-label-custom">Alamat</label>
+              <textarea class="form-control form-control-custom" id="inputAlamat" rows="2" placeholder="Masukkan alamat lengkap"></textarea>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label-custom">Telepon</label>
+              <input type="tel" class="form-control form-control-custom" id="inputTelepon" placeholder="08xx-xxxx-xxxx">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label-custom">Email</label>
+              <input type="email" class="form-control form-control-custom" id="inputEmail" placeholder="email@contoh.com">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label-custom">Golongan Darah</label>
+              <select class="form-control form-control-custom" id="inputGolDarah">
+                <option value="">Pilih</option>
+                <option value="A+">A+</option><option value="A-">A-</option>
+                <option value="B+">B+</option><option value="B-">B-</option>
+                <option value="AB+">AB+</option><option value="AB-">AB-</option>
+                <option value="O+">O+</option><option value="O-">O-</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-custom">Dokter</label>
+              <select class="form-control form-control-custom" id="inputDokter">
+                <option value="">Pilih dokter</option>
+                <option>dr. Siti Nurhaliza, Sp.PD</option>
+                <option>dr. Andi Wijaya, Sp.OG</option>
+                <option>dr. Maya Putri, Sp.M</option>
+                <option>dr. Hendra Kusuma, Sp.THT</option>
+                <option>dr. Budi Santoso, Sp.JP</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-custom">Jadwal Konsultasi</label>
+              <input type="datetime-local" class="form-control form-control-custom" id="inputJadwal">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-outline-custom" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn-primary-custom" onclick="savePatient()">
+          <i class="bi bi-check-lg"></i> Simpan Data
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
